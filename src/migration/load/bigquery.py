@@ -33,7 +33,10 @@ SCHEMA = [
 
 class BigQueryLoader(BaseLoader):
     def __init__(self) -> None:
-        self.client = bigquery.Client(project=settings.gcp_project_id)
+        self.client = bigquery.Client(
+            project=settings.gcp_project_id,
+            location=settings.bq_location,
+        )
         self.dataset_id = f"{settings.gcp_project_id}.{settings.bq_dataset}"
         self.table_id = f"{self.dataset_id}.{settings.bq_table}"
 

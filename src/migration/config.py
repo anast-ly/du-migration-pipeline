@@ -43,5 +43,7 @@ class Settings(BaseSettings):
     log_level: str = "INFO"
     dry_run: bool = False
 
+    # Comma-separated US state codes to migrate (case-insensitive).
+    target_states: str = "CA,OR,WA"
 
 settings = Settings()

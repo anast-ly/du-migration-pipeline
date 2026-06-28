@@ -13,10 +13,10 @@ run:
 	python -m migration
 
 up:
-	docker-compose up --build
+	docker compose up --build
 
 down:
-	docker-compose down -v
+	docker compose down -v
 
 clean:
 	find . -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true

@@ -1,4 +1,4 @@
-"""Entry point: `python -m src.migration`."""
+"""Entry point: `python -m migration`."""
 
 import sys
 

@@ -12,11 +12,15 @@ from dataclasses import asdict, dataclass
 from typing import Iterable
 
 from .schema import Chapter, parse_feature
+from .config import settings
 
 logger = logging.getLogger(__name__)
 
-TARGET_STATES = {"CA", "OR", "WA"}
 
+def _parse_states(raw: str) -> set[str]:
+    return {s.strip().upper() for s in raw.split(",") if s.strip()}
+    
+TARGET_STATES = _parse_states(settings.target_states)
 
 @dataclass
 class TransformStats:
