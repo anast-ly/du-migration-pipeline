@@ -29,7 +29,13 @@ resource "google_cloud_scheduler_job" "daily_migration" {
 
   http_target {
     http_method = "POST"
-    uri = "https://${var.region}-run.googleapis.com/apis/run.googleapis.com/v1/namespaces/${var.project_id}/jobs/${var.job_name}:run"
+    uri         = "https://run.googleapis.com/v2/projects/${var.project_id}/locations/${var.region}/jobs/${google_cloud_run_v2_job.migration.name}:run"
+
+    body = base64encode("{}")
+
+    headers = {
+      "Content-Type" = "application/json"
+    }
 
     oauth_token {
       service_account_email = google_service_account.scheduler_invoker.email

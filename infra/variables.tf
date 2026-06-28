@@ -71,3 +71,9 @@ variable "github_repo" {
   type        = string
   default     = "anast-ly/du-migration-pipeline"
 }
+
+variable "target_states" {
+  description = "Comma-separated US state codes to migrate."
+  type        = string
+  default     = "CA,OR,WA"
+}

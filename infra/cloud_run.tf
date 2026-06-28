@@ -41,7 +41,7 @@ resource "google_cloud_run_v2_job" "migration" {
         }
         env {
           name  = "TARGET_STATES"
-          value = "CA,OR,WA"
+          value = var.target_states
         }
         env {
           name  = "LOG_LEVEL"
@@ -72,6 +72,7 @@ resource "google_cloud_run_v2_job" "migration" {
   depends_on = [
     google_project_service.enabled,
     google_secret_manager_secret_version.db_password,
+    google_secret_manager_secret_iam_member.job_access,
     google_project_iam_member.job_roles,
   ]
 }
