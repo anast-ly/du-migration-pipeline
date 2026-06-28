@@ -3,7 +3,7 @@
 import json
 from pathlib import Path
 
-from src.migration.transform import transform
+from migration.transform import transform
 
 FIXTURE = Path(__file__).parent / "fixtures" / "sample_api_response.json"
 

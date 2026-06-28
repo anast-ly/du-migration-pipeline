@@ -10,7 +10,7 @@ test:
 	pytest tests/ -v --cov=src/migration
 
 run:
-	python -m src.migration
+	python -m migration
 
 up:
 	docker-compose up --build

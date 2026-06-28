@@ -24,6 +24,7 @@ class TransformStats:
     parse_errors: int = 0
     filtered_out: int = 0
     passed: int = 0
+    duplicates: int = 0
 
     def as_dict(self) -> dict:
         return asdict(self)
@@ -32,6 +33,7 @@ class TransformStats:
 def transform(features: Iterable[dict]) -> tuple[list[Chapter], TransformStats]:
     stats = TransformStats()
     chapters: list[Chapter] = []
+    seen_ids = set()
 
     for feature in features:
         stats.total_received += 1
@@ -39,7 +41,12 @@ def transform(features: Iterable[dict]) -> tuple[list[Chapter], TransformStats]:
         result = parse_feature(feature)
         if not result.ok:
             stats.parse_errors += 1
-            logger.warning("Skipping record: %s", result.error)
+            attrs = feature.get("attributes") or {}
+            source_id = attrs.get("OBJECTID") or attrs.get("ChapterID") or "unknown"
+
+            logger.warning(
+                "Skipping record source_id=%s reason=%s", source_id, result.error
+                )
             continue
 
         chapter = result.chapter
@@ -47,14 +54,22 @@ def transform(features: Iterable[dict]) -> tuple[list[Chapter], TransformStats]:
             stats.filtered_out += 1
             continue
 
+        if chapter.chapter_id in seen_ids:
+            stats.duplicates += 1
+            logger.warning("Duplicate chapter_id skipped: %s", chapter.chapter_id)
+            continue
+
+        seen_ids.add(chapter.chapter_id)
         chapters.append(chapter)
         stats.passed += 1
 
     logger.info(
-        "Transform complete: received=%d parse_errors=%d filtered_out=%d passed=%d",
+        "Transform complete: received=%d parse_errors=%d filtered_out=%d "
+        "duplicates=%d passed=%d",
         stats.total_received,
         stats.parse_errors,
         stats.filtered_out,
+        stats.duplicates,
         stats.passed,
     )
     return chapters, stats

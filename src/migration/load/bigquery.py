@@ -27,6 +27,7 @@ SCHEMA = [
     bigquery.SchemaField("longitude", "FLOAT", mode="REQUIRED"),
     bigquery.SchemaField("latitude", "FLOAT", mode="REQUIRED"),
     bigquery.SchemaField("migrated_at", "TIMESTAMP", mode="REQUIRED"),
+    bigquery.SchemaField("migration_run_id", "STRING", mode="REQUIRED"),
 ]
 
 
@@ -56,7 +57,7 @@ class BigQueryLoader(BaseLoader):
         self.client.create_table(table, exists_ok=True)
         logger.info("Table ready: %s", self.table_id)
 
-    def load(self, chapters: list[Chapter]) -> int:
+    def load(self, chapters: list[Chapter], run_id: str) -> int:
         self._ensure_dataset()
         self._ensure_table()
 
@@ -70,6 +71,7 @@ class BigQueryLoader(BaseLoader):
                 "longitude": c.coordinates.longitude,
                 "latitude": c.coordinates.latitude,
                 "migrated_at": now,
+                "migration_run_id": run_id,
             }
             for c in chapters
         ]

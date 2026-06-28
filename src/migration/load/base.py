@@ -21,6 +21,6 @@ class BaseLoader(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def load(self, chapters: list[Chapter]) -> int:
+    def load(self, chapters: list[Chapter], run_id: str) -> int:
         """Load chapters idempotently; return the number of rows written."""
         raise NotImplementedError

@@ -27,13 +27,20 @@ CREATE TABLE IF NOT EXISTS university_chapters (
     state        VARCHAR(2)       NOT NULL,
     longitude    DOUBLE PRECISION NOT NULL,
     latitude     DOUBLE PRECISION NOT NULL,
-    migrated_at  TIMESTAMPTZ      NOT NULL
+    migrated_at  TIMESTAMPTZ      NOT NULL,
+    migration_run_id UUID         NOT NULL
 );
 """
 
 UPSERT_SQL = """
 INSERT INTO university_chapters
-    (chapter_id, chapter_name, city, state, longitude, latitude, migrated_at)
+    (chapter_id, 
+    chapter_name, 
+    city, state, 
+    longitude, 
+    latitude, 
+    migrated_at, 
+    migration_run_id)
 VALUES %s
 ON CONFLICT (chapter_id) DO UPDATE SET
     chapter_name = EXCLUDED.chapter_name,
@@ -41,7 +48,8 @@ ON CONFLICT (chapter_id) DO UPDATE SET
     state        = EXCLUDED.state,
     longitude    = EXCLUDED.longitude,
     latitude     = EXCLUDED.latitude,
-    migrated_at  = EXCLUDED.migrated_at;
+    migrated_at  = EXCLUDED.migrated_at,
+    migration_run_id  = EXCLUDED.migration_run_id;
 """
 
 
@@ -68,7 +76,7 @@ class PostgresLoader(BaseLoader):
             logger.error("Postgres health check failed: %s", exc)
             return False
 
-    def load(self, chapters: list[Chapter]) -> int:
+    def load(self, chapters: list[Chapter], run_id: str) -> int:
         if not chapters:
             logger.warning("No rows to load into Postgres")
             return 0
@@ -83,6 +91,7 @@ class PostgresLoader(BaseLoader):
                 c.coordinates.longitude,
                 c.coordinates.latitude,
                 now,
+                run_id,
             )
             for c in chapters
         ]

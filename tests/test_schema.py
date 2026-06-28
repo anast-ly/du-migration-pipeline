@@ -1,6 +1,6 @@
 """Unit tests for schema-aware parsing, coercion and null handling."""
 
-from src.migration.schema import parse_feature
+from migration.schema import parse_feature
 
 
 def _feature(**attrs_and_geom):

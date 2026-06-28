@@ -26,9 +26,10 @@ logger = logging.getLogger(__name__)
 
 BASE_PARAMS = {
     "where": "1=1",
-    "outFields": "ChapterID,University_Chapter,City,State",
+    "outFields": "OBJECTID,ChapterID,University_Chapter,City,State",
     "outSR": "4326",
     "returnGeometry": "true",
+    "orderByFields": "OBJECTID",
     "f": "json",
 }
 

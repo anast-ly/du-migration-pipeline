@@ -21,6 +21,12 @@ dev = [
     "responses>=0.24.1",
 ]
 
+notebook = [
+    "jupyter>=1.0.0",
+    "pandas>=2.1.0",
+    "matplotlib>=3.8.0",
+]
+
 [tool.setuptools.packages.find]
 where = ["src"]
 
@@ -33,4 +39,4 @@ select = ["E", "F", "I"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-pythonpath = ["."]
+pythonpath = ["src"]

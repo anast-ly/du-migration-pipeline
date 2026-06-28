@@ -1,8 +1,8 @@
 """Orchestration: extract -> transform -> load, with a run summary.
 
 Design notes (worth being able to explain in the walk-through):
-  * health_check() runs BEFORE extraction, so we fail fast if the target
-    is unreachable instead of pulling data for nothing.
+  * for a real run the target health check runs before load (a DRY_RUN
+    skips the loader entirely, so extract + transform need no credentials).
   * data errors (one bad record) are logged and skipped inside transform;
     system errors (API down, target unreachable) propagate and fail the run.
   * main() returns a non-zero exit code on failure, which is what lets
@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import logging
 import sys
+from uuid import uuid4
 
 from .config import settings
 from .extract import extract_all
@@ -23,34 +24,45 @@ logger = logging.getLogger(__name__)
 
 
 def run() -> dict:
+    run_id = str(uuid4())
+
     logger.info(
-        "Run starting: target=%s dry_run=%s",
+        "Run starting: run_id=%s target=%s dry_run=%s",
+        run_id,
         settings.target_backend,
         settings.dry_run,
     )
 
-    loader = get_loader()
-    if not loader.health_check():
-        raise RuntimeError("Target health check failed — aborting before extract")
-
     chapters, stats = transform(extract_all())
 
     if settings.dry_run:
-        logger.info("DRY_RUN: skipping load of %d chapters", len(chapters))
+        logger.info(
+            "DRY_RUN: run_id=%s skipping load of %d chapters",
+            run_id,
+            len(chapters),
+        )
         loaded = 0
     else:
-        loaded = loader.load(chapters)
+        loader = get_loader()
+        if not loader.health_check():
+            raise RuntimeError("Target health check failed, aborting run")
 
-    summary = {**stats.as_dict(), "loaded": loaded}
+        loaded = loader.load(chapters, run_id=run_id)
+
+    summary = {**stats.as_dict(), "loaded": loaded, "run_id": run_id}
+
     logger.info(
-        "Run complete: received=%d parse_errors=%d filtered_out=%d "
-        "passed=%d loaded=%d",
+        "Run complete: run_id=%s received=%d parse_errors=%d filtered_out=%d "
+        "duplicates=%d passed=%d loaded=%d",
+        run_id,
         summary["total_received"],
         summary["parse_errors"],
         summary["filtered_out"],
+        summary["duplicates"],
         summary["passed"],
         summary["loaded"],
     )
+
     return summary
 
 
