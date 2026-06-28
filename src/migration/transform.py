@@ -11,11 +11,10 @@ import logging
 from dataclasses import asdict, dataclass
 from typing import Iterable
 
-from .schema import Chapter, parse_feature
 from .config import settings
+from .schema import Chapter, parse_feature
 
 logger = logging.getLogger(__name__)
-
 
 def _parse_states(raw: str) -> set[str]:
     return {s.strip().upper() for s in raw.split(",") if s.strip()}
