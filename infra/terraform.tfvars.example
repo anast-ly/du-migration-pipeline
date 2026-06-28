@@ -1,0 +1,17 @@
+# Copy to terraform.tfvars and override what you need.
+# terraform.tfvars is gitignored (it may contain secrets).
+
+project_id = "assessment-500800"
+region     = "europe-west2"
+
+# Image to deploy. After pushing to Artifact Registry, set this to your tag
+image_tag = "latest"
+
+# Daily schedule (UTC). Default is 06:00.
+# scheduler_cron = "0 6 * * *"
+
+# Secret value for the Postgres password (only used for the Cloud SQL path).
+# db_password = "use-a-real-password"
+
+# Provision Cloud SQL Postgres (costs money). Leave false to stay in free tier.
+enable_cloud_sql = false
