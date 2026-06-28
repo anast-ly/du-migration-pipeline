@@ -1,0 +1,73 @@
+{
+  "objectIdFieldName": "OBJECTID",
+  "geometryType": "esriGeometryPoint",
+  "spatialReference": { "wkid": 4326, "latestWkid": 4326 },
+  "features": [
+    {
+      "attributes": {
+        "OBJECTID": 2,
+        "University_Chapter": "Florida State University",
+        "City": "Tallahassee",
+        "State": "FL",
+        "ChapterID": "FL-0110",
+        "MEVR_RD": "Jarrett Lafferty"
+      },
+      "geometry": { "x": -84.30427263699994, "y": 30.438110943000027 }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 10,
+        "University_Chapter": "  Chico State DU  ",
+        "City": "Chico",
+        "State": "ca",
+        "ChapterID": "CA-0042",
+        "MEVR_RD": "Jane Doe"
+      },
+      "geometry": { "x": -121.8374, "y": 39.7285 }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 11,
+        "University_Chapter": "Oregon State University",
+        "City": "Corvallis",
+        "State": "OR",
+        "ChapterID": "OR-0007",
+        "MEVR_RD": "UNKNOWN"
+      },
+      "geometry": { "x": -123.2794, "y": 44.5646 }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 12,
+        "University_Chapter": "University of Washington",
+        "City": "Seattle",
+        "State": "WA",
+        "ChapterID": "WA-0019",
+        "MEVR_RD": "UNKNOWN"
+      },
+      "geometry": { "x": -122.3035, "y": 47.6553 }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 13,
+        "University_Chapter": null,
+        "City": "Nowhere",
+        "State": "CA",
+        "ChapterID": "CA-9999",
+        "MEVR_RD": "UNKNOWN"
+      },
+      "geometry": { "x": -120.0, "y": 38.0 }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 14,
+        "University_Chapter": "No Geometry Chapter",
+        "City": "Portland",
+        "State": "OR",
+        "ChapterID": "OR-0500",
+        "MEVR_RD": "UNKNOWN"
+      },
+      "geometry": {}
+    }
+  ]
+}
