@@ -1,6 +1,6 @@
 # Local end-to-end: spins up a Postgres target and runs the migration job
-# against it. No cloud credentials required — TARGET_BACKEND is forced to
-# postgres here, so a teammate can run the whole thing offline.
+# against it. Fully plug-and-play — no .env required. Every value has a default
+# via ${VAR:-default}; create a .env only if you want to override something.
 services:
   postgres:
     image: postgres:16
@@ -21,13 +21,18 @@ services:
 
   migration:
     build: .
-    # Loads API URL, page size, etc. from the host .env file.
-    env_file: .env
     environment:
       # Local run targets Postgres, reached via the compose service name
       # (NOT localhost — that's the classic compose networking gotcha).
       TARGET_BACKEND: postgres
       POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: ${POSTGRES_DB:-du_migration}
+      POSTGRES_USER: ${POSTGRES_USER:-migration}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+      TARGET_STATES: ${TARGET_STATES:-CA,OR,WA}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      DRY_RUN: "false"
     depends_on:
       postgres:
         # Wait until Postgres actually accepts connections, not just "started".
