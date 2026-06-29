@@ -93,6 +93,8 @@ du-migration-pipeline/
 ├── tests/                      # unit tests (offline, fixture-based)
 ├── notebooks/
 │   └── 01_explore_source.ipynb # source exploration / manual integration check
+├── .github/workflows/
+│   └── ci.yml                  # CI/CD: lint, test, build, deplo
 └── infra/                      # Terraform (GCP)
     ├── versions.tf  variables.tf  outputs.tf
     ├── apis.tf  artifact_registry.tf  bigquery.tf
@@ -391,8 +393,10 @@ docker compose down -v          # removes local Postgres + volume
 - **Keyless CI/CD.** GitHub Actions authenticates via Workload Identity Federation with
   an attribute condition restricting it to this repository — no static service-account
   keys exist anywhere.
-- **Auditable runs.** Each run generates a `run_id` written into every row and logged,
-  so a migration run can be traced end to end.
+- **Run lineage.** Every row carries the `run_id` of the run that wrote it, and each
+  run logs its `run_id` with start/complete summary counts, so loaded data can be
+  traced back to a run and a run's outcome reviewed in the logs. Run history can also be 
+  visualised in Gcloud.
 
 ---
 
@@ -400,11 +404,12 @@ docker compose down -v          # removes local Postgres + volume
 
 Given more time, the natural extensions are:
 
-- Provision Cloud SQL via the existing `enable_cloud_sql` flag and run the full
-  Postgres path in the cloud.
+- Wire the Cloud Run Job to the (already provisionable) Cloud SQL instance via the Cloud SQL connector, to run the full Postgres path in the cloud.
 - Add an integration-test job in CI against an ephemeral Postgres service container.
 - Add monitoring/alerting (a Cloud Monitoring alert on job failure).
 - Tighten IAM by scoping roles to the dataset/secret rather than the project.
 - Move Terraform state to a remote GCS backend for team collaboration.
 - If the source grew large: incremental/CDC extraction and a dead-letter table for
   rejected records.
+- Persist a run-audit table (run_id, timestamps, row counts, status) for queryable
+  migration history, rather than relying on per-row run_id plus logs.

@@ -1,12 +1,8 @@
-"""Orchestration: extract -> transform -> load, with a run summary.
+"""Orchestrates extract -> transform -> load and emits a run summary.
 
-Design notes (worth being able to explain in the walk-through):
-  * for a real run the target health check runs before load (a DRY_RUN
-    skips the loader entirely, so extract + transform need no credentials).
-  * data errors (one bad record) are logged and skipped inside transform;
-    system errors (API down, target unreachable) propagate and fail the run.
-  * main() returns a non-zero exit code on failure, which is what lets
-    Cloud Run / Cloud Scheduler detect a failed migration.
+For a real run the target is health-checked before loading; a dry run skips the
+loader entirely. Bad records are skipped in transform; an unreachable API or
+target raises and the process exits non-zero so the scheduler detects a failed run.
 """
 
 from __future__ import annotations

@@ -1,7 +1,7 @@
 # Keyless auth for GitHub Actions via Workload Identity Federation.
 # GitHub presents an OIDC token; GCP verifies it and grants short-lived access
 # by letting the repo's identities impersonate a dedicated deployer SA.
-# No JSON key exists anywhere — this is what "authentication handled in IaC" means.
+# No JSON key exists anywhere; CI authenticates via short-lived federated tokens.
 
 resource "google_iam_workload_identity_pool" "github" {
   project                   = var.project_id

@@ -23,7 +23,7 @@ services:
     build: .
     environment:
       # Local run targets Postgres, reached via the compose service name
-      # (NOT localhost — that's the classic compose networking gotcha).
+      # Reached by the compose service name, not localhost.
       TARGET_BACKEND: postgres
       POSTGRES_HOST: postgres
       POSTGRES_PORT: 5432

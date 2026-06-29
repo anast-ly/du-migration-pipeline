@@ -36,7 +36,10 @@ def test_stats_account_for_every_record():
     assert s["parse_errors"] == 2
     assert s["passed"] == 3
     assert (
-        s["passed"] + s["parse_errors"] + s["filtered_out"]
+        s["passed"]
+        + s["parse_errors"]
+        + s["filtered_out"]
+        + s["duplicates"]
         == s["total_received"]
     )
 

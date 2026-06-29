@@ -1,8 +1,7 @@
 """Centralised configuration, loaded from environment variables / .env.
 
 All runtime configuration lives here so the rest of the code never reads
-os.environ directly. This keeps config separate from logic (one of the
-explicit assessment requirements) and makes the pipeline trivially testable.
+os.environ directly. This keeps config separate from logic and makes the pipeline trivially testable.
 """
 
 from pydantic_settings import BaseSettings, SettingsConfigDict

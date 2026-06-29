@@ -1,10 +1,8 @@
-"""Loader interface — the seam that makes the pipeline target-agnostic.
+"""Loader interface — keeps the pipeline target-agnostic.
 
-The assessment names both BigQuery (task 1) and Postgres (task 3) as the
-migration target. Rather than choosing, we define one interface and two
-implementations, selected at runtime via TARGET_BACKEND. This is the
-'separation of concerns' the brief asks for, and lets a teammate run the
-exact same pipeline locally against Postgres and in the cloud against BigQuery.
+One interface with BigQuery and Postgres implementations, selected at runtime
+via TARGET_BACKEND, so the same pipeline runs locally against Postgres and in
+the cloud against BigQuery without code changes.
 """
 
 from __future__ import annotations
@@ -17,7 +15,7 @@ from ..schema import Chapter
 class BaseLoader(ABC):
     @abstractmethod
     def health_check(self) -> bool:
-        """Verify connectivity to the target before any data is pulled."""
+        """Verify target connectivity before loading data."""
         raise NotImplementedError
 
     @abstractmethod

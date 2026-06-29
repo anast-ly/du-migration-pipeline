@@ -65,7 +65,7 @@ class ParseResult:
         return self.chapter is not None
 
 
-# Mapping from assessment field -> real ArcGIS attribute name.
+# Target field -> source ArcGIS attribute name.
 FIELD_MAP = {
     "chapter_id": "ChapterID",
     "chapter_name": "University_Chapter",
